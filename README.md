@@ -8,7 +8,7 @@ Dieses Projekt ist eine interaktive Webanwendung zur Berechnung der Stromkosten 
 
 ## 📸 Screenshot
 
-![Screenshot der Anwendung](screenshot.png)
+![Screenshot der Anwendung](app_screen.png)
 
 ## 🚀 Funktionen
 
