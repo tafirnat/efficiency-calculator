@@ -4,7 +4,7 @@ Dieses Projekt ist eine interaktive Webanwendung zur Berechnung der Stromkosten 
 
 ## ✨ Live-Demo
 
-**Sie können die Anwendung hier live ausprobieren: https://tafirnat.github.io/efficiency-calculator/**
+**Sie können die Anwendung hier live ausprobieren: [https://tafirnat.github.io/efficiency-calculator/](https://tafirnat.github.io/efficiency-calculator/)**
 
 ## 🖼️ Screenshot
 
