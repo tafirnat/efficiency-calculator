@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="pageTitle">Güç Kaynağı Verimlilik ve Maliyet Hesaplayıcı</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg-color: #1e1e1e;
+            --header-bg-color: #0b4a5d;
+            --text-color: #e0e0e0;
+            --text-secondary-color: #a0a0a0;
+            --primary-color: #53c0ff;
+            --border-color: #333;
+            --input-bg-color: #2c2c2c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--container-bg-color);
+            padding: 20px 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.4em;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            background: var(--header-bg-color);
+            padding: 5px 12px;
+            border-radius: 12px;
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary-color);
+            padding: 8px 12px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .lang-switcher button:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .lang-switcher button.active {
+            background-color: var(--header-bg-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: .75fr 1.5fr;
+            gap: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.95em;
+            color: var(--text-secondary-color);
+        }
+
+        .input-group input {
+            width: calc(100% - 22px);
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px 5px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        td:last-child {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .results-table th,
+        .results-table td {
+            text-align: center;
+        }
+
+        .results-table td:first-child,
+        .results-table th:first-child {
+            text-align: left;
+        }
+
+        .results-table input {
+            width: 80%;
+            padding: 6px;
+            text-align: center;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+
+        .results-table input[type="text"] {
+            background-color: transparent;
+            border: none;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        /* Satır içi hesaplama stilleri */
+        .inline-calc {
+            font-size: 0.9em;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            /* Boşluk düşürüldü */
+            text-align: right;
+        }
+
+        .inline-calc .calc-line {
+            white-space: nowrap;
+            padding: 0px 6px;
+            /* Kenarlık için iç boşluk */
+            border-bottom: 1px solid var(--border-color);
+            /* Kenarlık eklendi */
+            border-radius: 4px;
+            /* Kenarlık yuvarlatıldı */
+            width: 90%;
+        }
+
+        .inline-calc .calc-value {
+            color: var(--text-secondary-color);
+        }
+
+        .inline-calc .calc-op {
+            color: var(--primary-color);
+            margin: 0 4px;
+        }
+
+        .inline-calc .calc-line.final-line {
+            border-color: var(--primary-color);
+            /* Sonuç kenarlığı */
+        }
+
+        .inline-calc .calc-final {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .explanation {
+            margin-top: 30px;
+            font-size: 0.95em;
+            color: var(--text-secondary-color);
+        }
+
+        .explanation p {
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .explanation strong {
+            color: var(--text-color);
+        }
+
+        .explanation code {
+            background-color: var(--input-bg-color);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #c7a7ff;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .lang-switcher {
+                margin-top: 15px;
+            }
+
+            .inline-calc {
+                align-items: flex-start;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1 data-key="headerTitle">Verimlilik Hesaplayıcı</h1>
+            <div class="lang-switcher">
+                <button id="lang-de">Deutsch</button>
+                <button id="lang-en">English</button>
+                <button id="lang-tr">Türkçe</button>
+            </div>
+        </header>
+
+        <p data-key="description">Farklı verimlilikteki güç kaynakları arasındaki maliyet farkını ve potansiyel
+            tasarrufu hesaplayın.</p>
+
+        <div class="main-content">
+            <div class="inputs">
+                <h2 data-key="inputsTitle">Giriş Değerleri</h2>
+                <div class="input-group">
+                    <label for="costKwh" data-key="costKwhLabel">1 kWh Elektrik Maliyeti (Cent)</label>
+                    <input type="number" id="costKwh" value="45" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label for="dailyHours" data-key="dailyHoursLabel">Günlük Çalışma Saati</label>
+                    <input type="number" id="dailyHours" value="8" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label for="monthlyDays" data-key="monthlyDaysLabel">Aylık Çalışma Günü</label>
+                    <input type="number" id="monthlyDays" value="22" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label for="pcCount" data-key="pcCountLabel">Toplam Bilgisayar Sayısı</label>
+                    <input type="number" id="pcCount" value="450" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label for="pcWattage" data-key="pcWattageLabel">Bilgisayarın Güç Tüketimi (Watt)</label>
+                    <input type="number" id="pcWattage" value="450" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="results">
+                <h2 data-key="resultsTitle">Karşılaştırma</h2>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th data-key="paramHeader">Parametre</th>
+                            <th><input type="text" value="Model A" id="modelAName"></th>
+                            <th><input type="text" value="Model B" id="modelBName"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-key="efficiencyLabel">Verimlilik (%)</td>
+                            <td><input type="number" value="82" id="efficiencyA" oninput="calculate()"></td>
+                            <td><input type="number" value="94" id="efficiencyB" oninput="calculate()"></td>
+                        </tr>
+                        <tr>
+                            <td data-key="powerDrawLabel">Çekilen Güç</td>
+                            <td id="powerDrawA"></td>
+                            <td id="powerDrawB"></td>
+                        </tr>
+                        <tr>
+                            <td data-key="monthlyCostLabel">Maliyet Dökümü (1 PC)</td>
+                            <td id="costMonthA"></td>
+                            <td id="costMonthB"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 data-key="savingsTitle">Tasarruf Özeti</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td data-key="monthlySavingsSingleLabel">Aylık Tasarruf (1 PC)</td>
+                            <td id="savingsMonthSingle"></td>
+                        </tr>
+                        <tr>
+                            <td data-key="yearlySavingsSingleLabel">Yıllık Tasarruf (1 PC)</td>
+                            <td id="savingsYearSingle"></td>
+                        </tr>
+                        <tr>
+                            <td data-key="monthlySavingsAllLabel">Aylık Toplam Tasarruf</td>
+                            <td id="savingsMonthAll"></td>
+                        </tr>
+                        <tr>
+                            <td data-key="yearlySavingsAllLabel">Yıllık Toplam Tasarruf</td>
+                            <td id="savingsYearAll"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h2 data-key="explanationTitle">Hesaplama Mantığı (Kendin Yap)</h2>
+            <div id="explanationContent"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const translations = {
+            'tr': {
+                pageTitle: 'Güç Kaynağı Verimlilik ve Maliyet Hesaplayıcı',
+                headerTitle: 'Verimlilik Hesaplayıcı',
+                description: 'Farklı verimlilikteki güç kaynakları arasındaki maliyet farkını ve potansiyel tasarrufu hesaplayın.',
+                inputsTitle: 'Giriş Değerleri',
+                costKwhLabel: '1 kWh Elektrik Maliyeti (Cent)',
+                dailyHoursLabel: 'Günlük Çalışma Saati',
+                monthlyDaysLabel: 'Aylık Çalışma Günü',
+                pcCountLabel: 'Toplam Bilgisayar Sayısı',
+                pcWattageLabel: 'Bilgisayarın Güç Tüketimi (Watt)',
+                resultsTitle: 'Karşılaştırma',
+                paramHeader: 'Parametre',
+                efficiencyLabel: 'Verimlilik (%)',
+                powerDrawLabel: 'Çekilen Güç',
+                monthlyCostLabel: 'Maliyet Dökümü (1 PC)',
+                savingsTitle: 'Tasarruf Özeti',
+                monthlySavingsSingleLabel: 'Aylık Tasarruf (1 PC)',
+                yearlySavingsSingleLabel: 'Yıllık Tasarruf (1 PC)',
+                monthlySavingsAllLabel: 'Aylık Toplam Tasarruf',
+                yearlySavingsAllLabel: 'Yıllık Toplam Tasarruf',
+                unitKw: 'kW',
+                unitHourShort: 's',
+                unitDayShort: 'g',
+                explanationTitle: 'Hesaplama Mantığı (Kendin Yap)',
+                explanationContent: `
+                    <p><strong>Adım 1: Gerçek Güç Tüketimini Bulun</strong></p>
+                    <p>Bir güç kaynağı, enerjiyi dönüştürürken bir kısmını ısı olarak kaybeder. Bu nedenle prizden, bilgisayarınızın kullandığından daha fazla güç çeker. Gerçek tüketimi bulmak için bilgisayarın gücünü, güç kaynağının verimliliğine böleriz.</p>
+                    <p><code>Gerçek Çekilen Güç (Watt) = PC Gücü / (Verimlilik % / 100)</code></p>
+                    <p><strong>Adım 2: Aylık Enerji Harcamasını Hesaplayın (kWh)</strong></p>
+                    <p>Elektrik faturaları Kilowatt-saat (kWh) üzerinden hesaplanır. Önce Watt'ı Kilowatt'a çevirir (1000'e bölerek), sonra toplam çalışma süresiyle çarparız.</p>
+                    <p><code>Aylık kWh = (Gerçek Güç / 1000) * Günlük Saat * Aylık Gün</code></p>
+                    <p><strong>Adım 3: Maliyeti Hesaplayın</strong></p>
+                    <p>Son olarak, bulduğunuz toplam kWh değerini, 1 kWh elektriğin Euro cinsinden maliyetiyle çarparak aylık masrafı bulursunuz.</p>
+                    <p><code>Aylık Maliyet (€) = Aylık kWh * (Cent Maliyeti / 100)</code></p>
+                `
+            },
+            'de': {
+                pageTitle: 'Netzteil-Effizienz- und Kostenrechner',
+                headerTitle: 'Effizienz-Rechner',
+                description: 'Berechnen Sie die Kostendifferenz und das Einsparpotenzial zwischen Netzteilen mit unterschiedlicher Effizienz.',
+                inputsTitle: 'Eingabewerte',
+                costKwhLabel: 'Kosten pro kWh (in Cent)',
+                dailyHoursLabel: 'Tägliche Arbeitszeit (Stunden)',
+                monthlyDaysLabel: 'Monatliche Arbeitstage',
+                pcCountLabel: 'Anzahl der Computer',
+                pcWattageLabel: 'Leistungsaufnahme des PCs (Watt)',
+                resultsTitle: 'Vergleich',
+                paramHeader: 'Parameter',
+                efficiencyLabel: 'Effizienz (%)',
+                powerDrawLabel: 'Leistung aus Netz',
+                monthlyCostLabel: 'Kostenaufschlüsselung (1 PC)',
+                savingsTitle: 'Einsparübersicht',
+                monthlySavingsSingleLabel: 'Monatl. Ersparnis (1 PC)',
+                yearlySavingsSingleLabel: 'Jährl. Ersparnis (1 PC)',
+                monthlySavingsAllLabel: 'Monatl. Gesamtersparnis',
+                yearlySavingsAllLabel: 'Jährl. Gesamtersparnis',
+                unitKw: 'kW',
+                unitHourShort: 'Std',
+                unitDayShort: 'T',
+                explanationTitle: 'Berechnungslogik (DIY)',
+                explanationContent: `<p><strong>Schritt 1: Ermitteln Sie die tatsächliche Leistungsaufnahme</strong></p><p>Ein Netzteil verliert bei der Energieumwandlung einen Teil als Wärme. Daher zieht es mehr Strom aus der Steckdose, als Ihr Computer verbraucht. Um den tatsächlichen Verbrauch zu ermitteln, teilen Sie die PC-Leistung durch die Effizienz des Netzteils.</p><p><code>Tatsächliche Leistungsaufnahme (Watt) = PC-Leistung / (Effizienz % / 100)</code></p><p><strong>Schritt 2: Berechnen Sie den monatlichen Energieverbrauch (kWh)</strong></p><p>Stromrechnungen basieren auf Kilowattstunden (kWh). Zuerst wandeln Sie Watt in Kilowatt um (durch 1000 teilen) und multiplizieren dies dann mit der Gesamtarbeitszeit.</p><p><code>Monatliche kWh = (Tatsächliche Leistung / 1000) * Tägliche Stunden * Monatliche Tage</code></p><p><strong>Schritt 3: Berechnen Sie die Kosten</strong></p><p>Zuletzt multiplizieren Sie den gesamten kWh-Wert mit den Kosten pro kWh in Euro, um die monatlichen Kosten zu ermitteln.</p><p><code>Monatliche Kosten (€) = Monatliche kWh * (Cent-Kosten / 100)</code></p>`
+            },
+            'en': {
+                pageTitle: 'PSU Efficiency & Cost Calculator',
+                headerTitle: 'Efficiency Calculator',
+                description: 'Calculate the cost difference and potential savings between power supplies with different efficiencies.',
+                inputsTitle: 'Input Values',
+                costKwhLabel: 'Cost per kWh (in Cents)',
+                dailyHoursLabel: 'Daily Working Hours',
+                monthlyDaysLabel: 'Monthly Working Days',
+                pcCountLabel: 'Number of Computers',
+                pcWattageLabel: 'PC Power Consumption (Watts)',
+                resultsTitle: 'Comparison',
+                paramHeader: 'Parameter',
+                efficiencyLabel: 'Efficiency (%)',
+                powerDrawLabel: 'Power Draw',
+                monthlyCostLabel: 'Cost Breakdown (1 PC)',
+                savingsTitle: 'Savings Summary',
+                monthlySavingsSingleLabel: 'Monthly Savings (1 PC)',
+                yearlySavingsSingleLabel: 'Yearly Savings (1 PC)',
+                monthlySavingsAllLabel: 'Total Monthly Savings',
+                yearlySavingsAllLabel: 'Total Yearly Savings',
+                unitKw: 'kW',
+                unitHourShort: 'h',
+                unitDayShort: 'd',
+                explanationTitle: 'Calculation Logic (DIY)',
+                explanationContent: `<p><strong>Step 1: Find the Real Power Draw</strong></p><p>A power supply loses some energy as heat during conversion. Therefore, it draws more power from the wall than your PC components actually use. To find the real power draw, divide the PC's wattage by the PSU's efficiency.</p><p><code>Actual Power Draw (Watts) = PC Wattage / (Efficiency % / 100)</code></p><p><strong>Step 2: Calculate Monthly Energy Usage (kWh)</strong></p><p>Electricity bills are based on Kilowatt-hours (kWh). First, convert Watts to Kilowatts (by dividing by 1000), then multiply by the total hours of operation.</p><p><code>Monthly kWh = (Actual Power Draw / 1000) * Daily Hours * Monthly Days</code></p><p><strong>Step 3: Calculate the Cost</strong></p><p>Finally, multiply the total kWh value by the cost per kWh in Euros to find the monthly expense.</p><p><code>Monthly Cost (€) = Monthly kWh * (Cost in Cents / 100)</code></p>`
+            }
+        };
+
+        let currentLang = 'tr';
+        const langToLocale = { 'tr': 'tr-TR', 'de': 'de-DE', 'en': 'en-GB' };
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) { element.innerHTML = translations[lang][key]; }
+            });
+
+            document.getElementById('explanationContent').innerHTML = translations[lang].explanationContent;
+
+            document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`lang-${lang}`).classList.add('active');
+
+            localStorage.setItem('preferredLanguage', lang);
+            calculate();
+        }
+
+        function formatCurrency(value, options = {}) {
+            return new Intl.NumberFormat(langToLocale[currentLang], { style: 'currency', currency: 'EUR', ...options }).format(value);
+        }
+
+        function formatNumber(value, unit) {
+            const formatted = new Intl.NumberFormat(langToLocale[currentLang], { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+            return `${formatted} ${unit}`;
+        }
+
+        function calculate() {
+            // Get user inputs
+            const costKwh = parseFloat(document.getElementById('costKwh').value) || 0;
+            const dailyHours = parseFloat(document.getElementById('dailyHours').value) || 0;
+            const monthlyDays = parseFloat(document.getElementById('monthlyDays').value) || 0;
+            const pcCount = parseFloat(document.getElementById('pcCount').value) || 0;
+            const pcWattage = parseFloat(document.getElementById('pcWattage').value) || 0;
+            const costKwhEuro = costKwh / 100;
+
+            const efficiencyA_percent = parseFloat(document.getElementById('efficiencyA').value) || 0;
+            const efficiencyB_percent = parseFloat(document.getElementById('efficiencyB').value) || 0;
+
+            const efficiencyA = efficiencyA_percent / 100;
+            const efficiencyB = efficiencyB_percent / 100;
+
+            // Calculations for Model A
+            const powerDrawA = efficiencyA > 0 ? (pcWattage / efficiencyA) : 0;
+            const costHourA_raw = (powerDrawA / 1000) * costKwhEuro;
+            const costDayA_raw = costHourA_raw * dailyHours;
+            const costMonthA_raw = costDayA_raw * monthlyDays;
+
+            // Calculations for Model B
+            const powerDrawB = efficiencyB > 0 ? (pcWattage / efficiencyB) : 0;
+            const costHourB_raw = (powerDrawB / 1000) * costKwhEuro;
+            const costDayB_raw = costHourB_raw * dailyHours;
+            const costMonthB_raw = costDayB_raw * monthlyDays;
+
+            // Savings Calculations
+            const savingsMonthSingle_raw = costMonthA_raw - costMonthB_raw;
+            const savingsYearSingle_raw = savingsMonthSingle_raw * 12;
+            const savingsMonthAll_raw = savingsMonthSingle_raw * pcCount;
+            const savingsYearAll_raw = savingsYearSingle_raw * pcCount;
+
+            // Update UI
+            document.getElementById('powerDrawA').innerText = formatNumber(powerDrawA, 'W');
+            document.getElementById('powerDrawB').innerText = formatNumber(powerDrawB, 'W');
+
+            // Build and display inline calculation string
+            const langDict = translations[currentLang];
+            const buildInlineCalc = (powerDraw, costHour, costDay, costMonth) => {
+                const powerInKw = powerDraw / 1000;
+                return `
+                    <div class="inline-calc">
+                        <div class="calc-line">
+                            <span class="calc-value">${formatNumber(powerInKw, langDict.unitKw)}</span>
+                            <span class="calc-op">× ${formatCurrency(costKwhEuro)}/kWh</span>
+                        </div>
+                         <div class="calc-line">
+                            <span class="calc-op">= ${formatCurrency(costHour)}</span>
+                            <span class="calc-op">× ${dailyHours}${langDict.unitHourShort}</span>
+                        </div>
+                        <div class="calc-line">
+                             <span class="calc-op">= ${formatCurrency(costDay)}</span>
+                             <span class="calc-op">× ${monthlyDays}${langDict.unitDayShort}</span>
+                        </div>
+                        <div class="calc-line final-line">
+                            <strong class="calc-final">= ${formatCurrency(costMonth)}</strong>
+                        </div>
+                    </div>
+                `;
+            };
+            document.getElementById('costMonthA').innerHTML = buildInlineCalc(powerDrawA, costHourA_raw, costDayA_raw, costMonthA_raw);
+            document.getElementById('costMonthB').innerHTML = buildInlineCalc(powerDrawB, costHourB_raw, costDayB_raw, costMonthB_raw);
+
+            // Update savings summary
+            document.getElementById('savingsMonthSingle').innerText = formatCurrency(savingsMonthSingle_raw);
+            document.getElementById('savingsYearSingle').innerText = formatCurrency(savingsYearSingle_raw);
+            document.getElementById('savingsMonthAll').innerText = formatCurrency(savingsMonthAll_raw);
+            document.getElementById('savingsYearAll').innerText = formatCurrency(savingsYearAll_raw);
+        }
+
+        // Event Listeners
+        document.getElementById('lang-tr').addEventListener('click', () => setLanguage('tr'));
+        document.getElementById('lang-de').addEventListener('click', () => setLanguage('de'));
+        document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+
+        // Initial Load
+        const savedLang = localStorage.getItem('preferredLanguage') || 'tr';
+        setLanguage(savedLang);
+
+    </script>
+
+</body>
+
+</html>
