@@ -164,19 +164,19 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 3px;
-            /* Boşluk düşürüldü */
             text-align: right;
+        }
+
+        .inline-calc.power-draw-details {
+            font-size: 0.8em;
+            margin-top: 5px;
         }
 
         .inline-calc .calc-line {
             white-space: nowrap;
             padding: 0px 6px;
-            /* Kenarlık için iç boşluk */
-            border-bottom: 1px solid var(--border-color);
-            /* Kenarlık eklendi */
-            border-radius: 4px;
-            /* Kenarlık yuvarlatıldı */
-            width: 90%;
+            width: 100%;
+            font-size: 12px;
         }
 
         .inline-calc .calc-value {
@@ -190,13 +190,19 @@
 
         .inline-calc .calc-line.final-line {
             border-color: var(--primary-color);
-            /* Sonuç kenarlığı */
         }
 
         .inline-calc .calc-final {
             font-weight: bold;
             font-size: 1.1em;
             color: var(--text-color);
+        }
+
+        #powerDrawA,
+        #powerDrawB,
+        .results-table .calc-final, 
+        .final-tabel .calc-final{
+            font-size: 1.2rem;
         }
 
         .explanation {
@@ -315,7 +321,7 @@
 
                 <h2 data-key="savingsTitle">Tasarruf Özeti</h2>
                 <table>
-                    <tbody>
+                    <tbody  class="final-tabel">
                         <tr>
                             <td data-key="monthlySavingsSingleLabel">Aylık Tasarruf (1 PC)</td>
                             <td id="savingsMonthSingle"></td>
@@ -369,70 +375,16 @@
                 unitKw: 'kW',
                 unitHourShort: 's',
                 unitDayShort: 'g',
+                unitPc: 'PC',
+                unitMonth: 'ay',
                 explanationTitle: 'Hesaplama Mantığı (Kendin Yap)',
-                explanationContent: `
-                    <p><strong>Adım 1: Gerçek Güç Tüketimini Bulun</strong></p>
-                    <p>Bir güç kaynağı, enerjiyi dönüştürürken bir kısmını ısı olarak kaybeder. Bu nedenle prizden, bilgisayarınızın kullandığından daha fazla güç çeker. Gerçek tüketimi bulmak için bilgisayarın gücünü, güç kaynağının verimliliğine böleriz.</p>
-                    <p><code>Gerçek Çekilen Güç (Watt) = PC Gücü / (Verimlilik % / 100)</code></p>
-                    <p><strong>Adım 2: Aylık Enerji Harcamasını Hesaplayın (kWh)</strong></p>
-                    <p>Elektrik faturaları Kilowatt-saat (kWh) üzerinden hesaplanır. Önce Watt'ı Kilowatt'a çevirir (1000'e bölerek), sonra toplam çalışma süresiyle çarparız.</p>
-                    <p><code>Aylık kWh = (Gerçek Güç / 1000) * Günlük Saat * Aylık Gün</code></p>
-                    <p><strong>Adım 3: Maliyeti Hesaplayın</strong></p>
-                    <p>Son olarak, bulduğunuz toplam kWh değerini, 1 kWh elektriğin Euro cinsinden maliyetiyle çarparak aylık masrafı bulursunuz.</p>
-                    <p><code>Aylık Maliyet (€) = Aylık kWh * (Cent Maliyeti / 100)</code></p>
-                `
+                explanationContent: `<p><strong>Adım 1: Gerçek Güç Tüketimini Bulun</strong></p><p>Bir güç kaynağı, enerjiyi dönüştürürken bir kısmını ısı olarak kaybeder. Bu nedenle prizden, bilgisayarınızın kullandığından daha fazla güç çeker. Gerçek tüketimi bulmak için bilgisayarın gücünü, güç kaynağının verimliliğine böleriz.</p><p><code>Gerçek Çekilen Güç (Watt) = PC Gücü / (Verimlilik % / 100)</code></p><p><strong>Adım 2: Aylık Enerji Harcamasını Hesaplayın (kWh)</strong></p><p>Elektrik faturaları Kilowatt-saat (kWh) üzerinden hesaplanır. Önce Watt'ı Kilowatt'a çevirir (1000'e bölerek), sonra toplam çalışma süresiyle çarparız.</p><p><code>Aylık kWh = (Gerçek Güç / 1000) * Günlük Saat * Aylık Gün</code></p><p><strong>Adım 3: Maliyeti Hesaplayın</strong></p><p>Son olarak, bulduğunuz toplam kWh değerini, 1 kWh elektriğin Euro cinsinden maliyetiyle çarparak aylık masrafı bulursunuz.</p><p><code>Aylık Maliyet (€) = Aylık kWh * (Cent Maliyeti / 100)</code></p>`
             },
             'de': {
-                pageTitle: 'Netzteil-Effizienz- und Kostenrechner',
-                headerTitle: 'Effizienz-Rechner',
-                description: 'Berechnen Sie die Kostendifferenz und das Einsparpotenzial zwischen Netzteilen mit unterschiedlicher Effizienz.',
-                inputsTitle: 'Eingabewerte',
-                costKwhLabel: 'Kosten pro kWh (in Cent)',
-                dailyHoursLabel: 'Tägliche Arbeitszeit (Stunden)',
-                monthlyDaysLabel: 'Monatliche Arbeitstage',
-                pcCountLabel: 'Anzahl der Computer',
-                pcWattageLabel: 'Leistungsaufnahme des PCs (Watt)',
-                resultsTitle: 'Vergleich',
-                paramHeader: 'Parameter',
-                efficiencyLabel: 'Effizienz (%)',
-                powerDrawLabel: 'Leistung aus Netz',
-                monthlyCostLabel: 'Kostenaufschlüsselung (1 PC)',
-                savingsTitle: 'Einsparübersicht',
-                monthlySavingsSingleLabel: 'Monatl. Ersparnis (1 PC)',
-                yearlySavingsSingleLabel: 'Jährl. Ersparnis (1 PC)',
-                monthlySavingsAllLabel: 'Monatl. Gesamtersparnis',
-                yearlySavingsAllLabel: 'Jährl. Gesamtersparnis',
-                unitKw: 'kW',
-                unitHourShort: 'Std',
-                unitDayShort: 'T',
-                explanationTitle: 'Berechnungslogik (DIY)',
-                explanationContent: `<p><strong>Schritt 1: Ermitteln Sie die tatsächliche Leistungsaufnahme</strong></p><p>Ein Netzteil verliert bei der Energieumwandlung einen Teil als Wärme. Daher zieht es mehr Strom aus der Steckdose, als Ihr Computer verbraucht. Um den tatsächlichen Verbrauch zu ermitteln, teilen Sie die PC-Leistung durch die Effizienz des Netzteils.</p><p><code>Tatsächliche Leistungsaufnahme (Watt) = PC-Leistung / (Effizienz % / 100)</code></p><p><strong>Schritt 2: Berechnen Sie den monatlichen Energieverbrauch (kWh)</strong></p><p>Stromrechnungen basieren auf Kilowattstunden (kWh). Zuerst wandeln Sie Watt in Kilowatt um (durch 1000 teilen) und multiplizieren dies dann mit der Gesamtarbeitszeit.</p><p><code>Monatliche kWh = (Tatsächliche Leistung / 1000) * Tägliche Stunden * Monatliche Tage</code></p><p><strong>Schritt 3: Berechnen Sie die Kosten</strong></p><p>Zuletzt multiplizieren Sie den gesamten kWh-Wert mit den Kosten pro kWh in Euro, um die monatlichen Kosten zu ermitteln.</p><p><code>Monatliche Kosten (€) = Monatliche kWh * (Cent-Kosten / 100)</code></p>`
+                pageTitle: 'Netzteil-Effizienz- und Kostenrechner', headerTitle: 'Effizienz-Rechner', description: 'Berechnen Sie die Kostendifferenz und das Einsparpotenzial zwischen Netzteilen mit unterschiedlicher Effizienz.', inputsTitle: 'Eingabewerte', costKwhLabel: 'Kosten pro kWh (in Cent)', dailyHoursLabel: 'Tägliche Arbeitszeit (Stunden)', monthlyDaysLabel: 'Monatliche Arbeitstage', pcCountLabel: 'Anzahl der Computer', pcWattageLabel: 'Leistungsaufnahme des PCs (Watt)', resultsTitle: 'Vergleich', paramHeader: 'Parameter', efficiencyLabel: 'Effizienz (%)', powerDrawLabel: 'Leistung aus Netz', monthlyCostLabel: 'Kostenaufschlüsselung (1 PC)', savingsTitle: 'Einsparübersicht', monthlySavingsSingleLabel: 'Monatl. Ersparnis (1 PC)', yearlySavingsSingleLabel: 'Jährl. Ersparnis (1 PC)', monthlySavingsAllLabel: 'Monatl. Gesamtersparnis', yearlySavingsAllLabel: 'Jährl. Gesamtersparnis', unitKw: 'kW', unitHourShort: 'Std', unitDayShort: 'T', unitPc: 'PCs', unitMonth: 'Monate', explanationTitle: 'Berechnungslogik (DIY)', explanationContent: `<p><strong>Schritt 1: Ermitteln Sie die tatsächliche Leistungsaufnahme</strong></p><p>Ein Netzteil verliert bei der Energieumwandlung einen Teil als Wärme. Daher zieht es mehr Strom aus der Steckdose, als Ihr Computer verbraucht. Um den tatsächlichen Verbrauch zu ermitteln, teilen Sie die PC-Leistung durch die Effizienz des Netzteils.</p><p><code>Tatsächliche Leistungsaufnahme (Watt) = PC-Leistung / (Effizienz % / 100)</code></p><p><strong>Schritt 2: Berechnen Sie den monatlichen Energieverbrauch (kWh)</strong></p><p>Stromrechnungen basieren auf Kilowattstunden (kWh). Zuerst wandeln Sie Watt in Kilowatt um (durch 1000 teilen) und multiplizieren dies dann mit der Gesamtarbeitszeit.</p><p><code>Monatliche kWh = (Tatsächliche Leistung / 1000) * Tägliche Stunden * Monatliche Tage</code></p><p><strong>Schritt 3: Berechnen Sie die Kosten</strong></p><p>Zuletzt multiplizieren Sie den gesamten kWh-Wert mit den Kosten pro kWh in Euro, um die monatlichen Kosten zu ermitteln.</p><p><code>Monatliche Kosten (€) = Monatliche kWh * (Cent-Kosten / 100)</code></p>`
             },
             'en': {
-                pageTitle: 'PSU Efficiency & Cost Calculator',
-                headerTitle: 'Efficiency Calculator',
-                description: 'Calculate the cost difference and potential savings between power supplies with different efficiencies.',
-                inputsTitle: 'Input Values',
-                costKwhLabel: 'Cost per kWh (in Cents)',
-                dailyHoursLabel: 'Daily Working Hours',
-                monthlyDaysLabel: 'Monthly Working Days',
-                pcCountLabel: 'Number of Computers',
-                pcWattageLabel: 'PC Power Consumption (Watts)',
-                resultsTitle: 'Comparison',
-                paramHeader: 'Parameter',
-                efficiencyLabel: 'Efficiency (%)',
-                powerDrawLabel: 'Power Draw',
-                monthlyCostLabel: 'Cost Breakdown (1 PC)',
-                savingsTitle: 'Savings Summary',
-                monthlySavingsSingleLabel: 'Monthly Savings (1 PC)',
-                yearlySavingsSingleLabel: 'Yearly Savings (1 PC)',
-                monthlySavingsAllLabel: 'Total Monthly Savings',
-                yearlySavingsAllLabel: 'Total Yearly Savings',
-                unitKw: 'kW',
-                unitHourShort: 'h',
-                unitDayShort: 'd',
-                explanationTitle: 'Calculation Logic (DIY)',
-                explanationContent: `<p><strong>Step 1: Find the Real Power Draw</strong></p><p>A power supply loses some energy as heat during conversion. Therefore, it draws more power from the wall than your PC components actually use. To find the real power draw, divide the PC's wattage by the PSU's efficiency.</p><p><code>Actual Power Draw (Watts) = PC Wattage / (Efficiency % / 100)</code></p><p><strong>Step 2: Calculate Monthly Energy Usage (kWh)</strong></p><p>Electricity bills are based on Kilowatt-hours (kWh). First, convert Watts to Kilowatts (by dividing by 1000), then multiply by the total hours of operation.</p><p><code>Monthly kWh = (Actual Power Draw / 1000) * Daily Hours * Monthly Days</code></p><p><strong>Step 3: Calculate the Cost</strong></p><p>Finally, multiply the total kWh value by the cost per kWh in Euros to find the monthly expense.</p><p><code>Monthly Cost (€) = Monthly kWh * (Cost in Cents / 100)</code></p>`
+                pageTitle: 'PSU Efficiency & Cost Calculator', headerTitle: 'Efficiency Calculator', description: 'Calculate the cost difference and potential savings between power supplies with different efficiencies.', inputsTitle: 'Input Values', costKwhLabel: 'Cost per kWh (in Cents)', dailyHoursLabel: 'Daily Working Hours', monthlyDaysLabel: 'Monthly Working Days', pcCountLabel: 'Number of Computers', pcWattageLabel: 'PC Power Consumption (Watts)', resultsTitle: 'Comparison', paramHeader: 'Parameter', efficiencyLabel: 'Efficiency (%)', powerDrawLabel: 'Power Draw', monthlyCostLabel: 'Cost Breakdown (1 PC)', savingsTitle: 'Savings Summary', monthlySavingsSingleLabel: 'Monthly Savings (1 PC)', yearlySavingsSingleLabel: 'Yearly Savings (1 PC)', monthlySavingsAllLabel: 'Total Monthly Savings', yearlySavingsAllLabel: 'Total Yearly Savings', unitKw: 'kW', unitHourShort: 'h', unitDayShort: 'd', unitPc: 'PCs', unitMonth: 'months', explanationTitle: 'Calculation Logic (DIY)', explanationContent: `<p><strong>Step 1: Find the Real Power Draw</strong></p><p>A power supply loses some energy as heat during conversion. Therefore, it draws more power from the wall than your PC components actually use. To find the real power draw, divide the PC's wattage by the PSU's efficiency.</p><p><code>Actual Power Draw (Watts) = PC Wattage / (Efficiency % / 100)</code></p><p><strong>Step 2: Calculate Monthly Energy Usage (kWh)</strong></p><p>Electricity bills are based on Kilowatt-hours (kWh). First, convert Watts to Kilowatts (by dividing by 1000), then multiply by the total hours of operation.</p><p><code>Monthly kWh = (Actual Power Draw / 1000) * Daily Hours * Monthly Days</code></p><p><strong>Step 3: Calculate the Cost</strong></p><p>Finally, multiply the total kWh value by the cost per kWh in Euros to find the monthly expense.</p><p><code>Monthly Cost (€) = Monthly kWh * (Cost in Cents / 100)</code></p>`
             }
         };
 
@@ -458,8 +410,8 @@
             calculate();
         }
 
-        function formatCurrency(value, options = {}) {
-            return new Intl.NumberFormat(langToLocale[currentLang], { style: 'currency', currency: 'EUR', ...options }).format(value);
+        function formatCurrency(value) {
+            return new Intl.NumberFormat(langToLocale[currentLang], { style: 'currency', currency: 'EUR' }).format(value);
         }
 
         function formatNumber(value, unit) {
@@ -498,15 +450,29 @@
             const savingsMonthSingle_raw = costMonthA_raw - costMonthB_raw;
             const savingsYearSingle_raw = savingsMonthSingle_raw * 12;
             const savingsMonthAll_raw = savingsMonthSingle_raw * pcCount;
-            const savingsYearAll_raw = savingsYearSingle_raw * pcCount;
+            const savingsYearAll_raw = savingsMonthAll_raw * 12;
 
-            // Update UI
-            document.getElementById('powerDrawA').innerText = formatNumber(powerDrawA, 'W');
-            document.getElementById('powerDrawB').innerText = formatNumber(powerDrawB, 'W');
-
-            // Build and display inline calculation string
+            // ----------- UPDATE UI -----------
             const langDict = translations[currentLang];
-            const buildInlineCalc = (powerDraw, costHour, costDay, costMonth) => {
+
+            // Update Power Draw with details
+            const powerDrawHTML = (powerDraw) => {
+                const powerInKw = powerDraw / 1000;
+                return `
+                    <div>${formatNumber(powerDraw, 'W')}</div>
+                    <div class="inline-calc power-draw-details">
+                         <div class="calc-line">
+                            <span class="calc-value calc-op">${formatNumber(powerInKw, langDict.unitKw)}</span>
+                         </div>
+                    </div>
+                `;
+            };
+            document.getElementById('powerDrawA').innerHTML = powerDrawHTML(powerDrawA);
+            document.getElementById('powerDrawB').innerHTML = powerDrawHTML(powerDrawB);
+
+
+            // Update Cost Breakdown
+            const buildCostBreakdown = (powerDraw, costHour, costDay, costMonth) => {
                 const powerInKw = powerDraw / 1000;
                 return `
                     <div class="inline-calc">
@@ -523,19 +489,51 @@
                              <span class="calc-op">× ${monthlyDays}${langDict.unitDayShort}</span>
                         </div>
                         <div class="calc-line final-line">
-                            <strong class="calc-final">= ${formatCurrency(costMonth)}</strong>
+                            <strong class="calc-final"> ${formatCurrency(costMonth)}</strong>
                         </div>
                     </div>
                 `;
             };
-            document.getElementById('costMonthA').innerHTML = buildInlineCalc(powerDrawA, costHourA_raw, costDayA_raw, costMonthA_raw);
-            document.getElementById('costMonthB').innerHTML = buildInlineCalc(powerDrawB, costHourB_raw, costDayB_raw, costMonthB_raw);
+            document.getElementById('costMonthA').innerHTML = buildCostBreakdown(powerDrawA, costHourA_raw, costDayA_raw, costMonthA_raw);
+            document.getElementById('costMonthB').innerHTML = buildCostBreakdown(powerDrawB, costHourB_raw, costDayB_raw, costMonthB_raw);
 
-            // Update savings summary
-            document.getElementById('savingsMonthSingle').innerText = formatCurrency(savingsMonthSingle_raw);
-            document.getElementById('savingsYearSingle').innerText = formatCurrency(savingsYearSingle_raw);
-            document.getElementById('savingsMonthAll').innerText = formatCurrency(savingsMonthAll_raw);
-            document.getElementById('savingsYearAll').innerText = formatCurrency(savingsYearAll_raw);
+
+            // Update Savings Summary with details
+            document.getElementById('savingsMonthSingle').innerHTML = `
+                <div class="inline-calc">
+                    <div class="calc-line final-line">
+                        <span class="calc-value">${formatCurrency(costMonthA_raw)}</span>
+                        <span class="calc-op">- ${formatCurrency(costMonthB_raw)}</span>
+                        <strong class="calc-final"> ${formatCurrency(savingsMonthSingle_raw)}</strong>
+                    </div>
+                </div>`;
+
+            document.getElementById('savingsYearSingle').innerHTML = `
+                <div class="inline-calc">
+                    <div class="calc-line final-line">
+                        <span class="calc-value">${formatCurrency(savingsMonthSingle_raw)}</span>
+                        <span class="calc-op">× 12 ${langDict.unitMonth}</span>
+                        <strong class="calc-final"> ${formatCurrency(savingsYearSingle_raw)}</strong>
+                    </div>
+                </div>`;
+
+            document.getElementById('savingsMonthAll').innerHTML = `
+                <div class="inline-calc">
+                    <div class="calc-line final-line">
+                        <span class="calc-value">${formatCurrency(savingsMonthSingle_raw)}</span>
+                        <span class="calc-op">× ${pcCount} ${langDict.unitPc}</span>
+                        <strong class="calc-final"> ${formatCurrency(savingsMonthAll_raw)}</strong>
+                    </div>
+                </div>`;
+
+            document.getElementById('savingsYearAll').innerHTML = `
+                 <div class="inline-calc">
+                    <div class="calc-line final-line">
+                        <span class="calc-value">${formatCurrency(savingsMonthAll_raw)}</span>
+                        <span class="calc-op">× 12 ${langDict.unitMonth}</span>
+                        <strong class="calc-final"> ${formatCurrency(savingsYearAll_raw)}</strong>
+                    </div>
+                </div>`;
         }
 
         // Event Listeners
