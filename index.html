@@ -141,7 +141,8 @@
         }
 
         .results-table input {
-            width: 80%;
+            width: 25%;
+            min-width: 2rem;
             padding: 6px;
             text-align: center;
             background-color: var(--input-bg-color);
@@ -200,8 +201,8 @@
 
         #powerDrawA,
         #powerDrawB,
-        .results-table .calc-final, 
-        .final-tabel .calc-final{
+        .results-table .calc-final,
+        .final-tabel .calc-final {
             font-size: 1.2rem;
         }
 
@@ -270,23 +271,23 @@
                 <h2 data-key="inputsTitle">Giriş Değerleri</h2>
                 <div class="input-group">
                     <label for="costKwh" data-key="costKwhLabel">1 kWh Elektrik Maliyeti (Cent)</label>
-                    <input type="number" id="costKwh" value="45" oninput="calculate()">
+                    <input type="number" id="costKwh" value="45" min="0" oninput="calculate()">
                 </div>
                 <div class="input-group">
                     <label for="dailyHours" data-key="dailyHoursLabel">Günlük Çalışma Saati</label>
-                    <input type="number" id="dailyHours" value="8" oninput="calculate()">
+                    <input type="number" id="dailyHours" value="8" min="0" oninput="calculate()">
                 </div>
                 <div class="input-group">
                     <label for="monthlyDays" data-key="monthlyDaysLabel">Aylık Çalışma Günü</label>
-                    <input type="number" id="monthlyDays" value="22" oninput="calculate()">
+                    <input type="number" id="monthlyDays" value="22" min="0" oninput="calculate()">
                 </div>
                 <div class="input-group">
                     <label for="pcCount" data-key="pcCountLabel">Toplam Bilgisayar Sayısı</label>
-                    <input type="number" id="pcCount" value="450" oninput="calculate()">
+                    <input type="number" id="pcCount" value="450" min="0" oninput="calculate()">
                 </div>
                 <div class="input-group">
                     <label for="pcWattage" data-key="pcWattageLabel">Bilgisayarın Güç Tüketimi (Watt)</label>
-                    <input type="number" id="pcWattage" value="450" oninput="calculate()">
+                    <input type="number" id="pcWattage" value="450" min="0" oninput="calculate()">
                 </div>
             </div>
 
@@ -303,8 +304,8 @@
                     <tbody>
                         <tr>
                             <td data-key="efficiencyLabel">Verimlilik (%)</td>
-                            <td><input type="number" value="82" id="efficiencyA" oninput="calculate()"></td>
-                            <td><input type="number" value="94" id="efficiencyB" oninput="calculate()"></td>
+                            <td><input type="number" value="82" id="efficiencyA" min="0" max="100" oninput="calculate()"></td>
+                            <td><input type="number" value="94" id="efficiencyB" min="0" max="100" oninput="calculate()"></td>
                         </tr>
                         <tr>
                             <td data-key="powerDrawLabel">Çekilen Güç</td>
@@ -321,7 +322,7 @@
 
                 <h2 data-key="savingsTitle">Tasarruf Özeti</h2>
                 <table>
-                    <tbody  class="final-tabel">
+                    <tbody class="final-tabel">
                         <tr>
                             <td data-key="monthlySavingsSingleLabel">Aylık Tasarruf (1 PC)</td>
                             <td id="savingsMonthSingle"></td>
@@ -462,6 +463,7 @@
                     <div>${formatNumber(powerDraw, 'W')}</div>
                     <div class="inline-calc power-draw-details">
                          <div class="calc-line">
+                            <span class="calc-value">${(powerDraw).toFixed(2)}/1000 = </span>
                             <span class="calc-value calc-op">${formatNumber(powerInKw, langDict.unitKw)}</span>
                          </div>
                     </div>
